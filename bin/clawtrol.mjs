@@ -87,10 +87,19 @@ async function runInit() {
     }
     const selectedModules = ALL_MODULES.filter((_, i) => enabled[i]).map(m => m.id);
 
-    // 4. Theme
+    // 4. Theme preset + mode
     print();
-    const themeInput = (await ask(rl, `${bold('Theme')} — ${green('1')} dark ${dim('(default)')} / ${green('2')} light: `)).trim();
-    const theme = themeInput === '2' ? 'light' : 'dark';
+    print(bold('Theme preset:'));
+    print(`  ${green('1.')} 🟢 Nova ${dim('(cyberpunk command center) — default')}`);
+    print(`  ${green('2.')} 🔵 Midnight ${dim('(clean dark minimal)')}`);
+    print(`  ${green('3.')} 🟣 Catppuccin ${dim('(warm pastel dark)')}`);
+    print(`  ${green('4.')} ☀️ Solar ${dim('(light solarized)')}`);
+    const presetInput = (await ask(rl, `${bold('Preset')} ${dim('(1-4, default 1)')}: `)).trim();
+    const presetMap = { '1': 'nova', '2': 'midnight', '3': 'catppuccin', '4': 'solar' };
+    const themePreset = presetMap[presetInput] || 'nova';
+
+    const themeInput = (await ask(rl, `${bold('Mode')} — ${green('1')} dark ${dim('(default)')} / ${green('2')} light / ${green('3')} system: `)).trim();
+    const themeMode = themeInput === '2' ? 'light' : themeInput === '3' ? 'system' : 'dark';
 
     // 5. OpenClaw API URL
     const apiUrl = (await ask(rl, `${bold('OpenClaw API URL')} ${dim('(http://localhost:3000)')}: `)).trim() || 'http://localhost:3000';
@@ -103,7 +112,7 @@ async function runInit() {
     print(`  Project:  ${cyan(projectName)}`);
     print(`  Title:    ${title}`);
     print(`  Modules:  ${selectedModules.length}/${ALL_MODULES.length} enabled`);
-    print(`  Theme:    ${theme}`);
+    print(`  Theme:    ${themePreset} (${themeMode})`);
     print(`  API URL:  ${apiUrl}`);
     print();
 
@@ -148,7 +157,8 @@ ${modulesStr}
   ],
 
   theme: {
-    mode: '${theme}',
+    preset: '${themePreset}',
+    mode: '${themeMode}',
     accent: '#3b82f6',
   },
 

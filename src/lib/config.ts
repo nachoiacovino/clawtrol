@@ -17,6 +17,8 @@ export interface WidgetConfig {
   size: 'sm' | 'md' | 'lg';
 }
 
+import type { ThemePresetId } from './themes';
+
 export interface ClawtrolConfig {
   title?: string;
   modules?: ModuleId[];
@@ -24,6 +26,7 @@ export interface ClawtrolConfig {
   plugins?: string[];
   theme?: {
     mode?: 'dark' | 'light' | 'system';
+    preset?: ThemePresetId;
     accent?: string;
   };
   openclaw?: {
@@ -50,6 +53,7 @@ export const defaultConfig: ClawtrolConfig = {
   ],
   theme: {
     mode: 'dark',
+    preset: 'nova',
     accent: '#3b82f6',
   },
   port: 3001,

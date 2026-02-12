@@ -6,7 +6,7 @@ export default function TerminalModule() {
       <div className="card-base overflow-hidden" style={{ height: 'calc(100vh - 180px)' }}>
         <div className="flex items-center justify-between px-3 py-2 border-b" style={{ borderColor: 'var(--border-dim)' }}>
           <div className="flex items-center gap-2">
-            <h2 className="text-[11px] font-medium uppercase tracking-widest" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-orbitron)' }}>
+            <h2 className="text-[11px] font-medium uppercase tracking-widest" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-display)' }}>
               TERMINAL
             </h2>
             <span className="text-[9px] px-1.5 py-0.5 rounded uppercase tracking-wider" style={{ background: 'rgba(0,255,200,0.1)', color: 'var(--accent-cyan)' }}>

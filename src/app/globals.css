@@ -22,8 +22,16 @@
   --glow-cyan: 0 0 20px rgba(0, 255, 200, 0.3);
   --glow-green: 0 0 20px rgba(0, 255, 106, 0.3);
   --glow-red: 0 0 20px rgba(255, 59, 92, 0.3);
-  --font-display: var(--font-orbitron);
-  --font-data: var(--font-jetbrains);
+  --font-display: var(--font-orbitron, var(--font-inter, sans-serif));
+  --font-data: var(--font-jetbrains, var(--font-inter, monospace));
+  --scrollbar-thumb: rgba(0, 255, 200, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 255, 200, 0.3);
+  --selection-bg: rgba(0, 255, 200, 0.2);
+  --grid-line: rgba(0, 255, 200, 0.03);
+  --scanline: rgba(0, 0, 0, 0.03);
+  --card-top-line: var(--accent-cyan);
+  --status-online-glow: 0 0 8px rgba(0, 255, 106, 0.6);
+  --status-offline-glow: 0 0 8px rgba(255, 59, 92, 0.6);
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -116,8 +124,8 @@ body {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0, 255, 200, 0.15); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0, 255, 200, 0.3); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
 
 /* Mobile modal scrolling fixes */
 @supports (height: 100dvh) {
@@ -141,21 +149,21 @@ body.modal-open {
   scroll-behavior: smooth;
 }
 
-/* Grid background */
-body::before {
+/* Grid background (nova preset) */
+body.theme-glow::before {
   content: '';
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0, 255, 200, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 200, 0.03) 1px, transparent 1px);
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 40px 40px;
   pointer-events: none;
   z-index: 0;
 }
 
-/* Scanline overlay */
-body::after {
+/* Scanline overlay (nova preset) */
+body.theme-glow::after {
   content: '';
   position: fixed;
   inset: 0;
@@ -163,8 +171,8 @@ body::after {
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
+    var(--scanline) 2px,
+    var(--scanline) 4px
   );
   pointer-events: none;
   z-index: 1;
@@ -172,7 +180,7 @@ body::after {
 
 /* Selection */
 ::selection {
-  background: rgba(0, 255, 200, 0.2);
+  background: var(--selection-bg);
   color: var(--accent-cyan);
 }
 
@@ -225,6 +233,18 @@ body::after {
 .text-glow-green { text-shadow: 0 0 10px rgba(0, 255, 106, 0.5); }
 .text-glow-red { text-shadow: 0 0 10px rgba(255, 59, 92, 0.5); }
 
+body.theme-clean .glow-cyan,
+body.theme-clean .glow-green,
+body.theme-clean .glow-red {
+  box-shadow: none;
+}
+
+body.theme-clean .text-glow-cyan,
+body.theme-clean .text-glow-green,
+body.theme-clean .text-glow-red {
+  text-shadow: none;
+}
+
 /* Card base */
 .card-base {
   background: var(--bg-card);
@@ -243,7 +263,7 @@ body::after {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  background: linear-gradient(90deg, transparent, var(--card-top-line), transparent);
   opacity: 0.3;
 }
 
@@ -253,7 +273,7 @@ body::after {
   height: 6px;
   border-radius: 50%;
   background: var(--accent-green);
-  box-shadow: 0 0 8px rgba(0, 255, 106, 0.6);
+  box-shadow: var(--status-online-glow);
 }
 
 .status-offline {
@@ -261,7 +281,7 @@ body::after {
   height: 6px;
   border-radius: 50%;
   background: var(--accent-red);
-  box-shadow: 0 0 8px rgba(255, 59, 92, 0.6);
+  box-shadow: var(--status-offline-glow);
 }
 
 /* Terminal log */

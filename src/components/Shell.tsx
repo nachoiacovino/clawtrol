@@ -63,7 +63,7 @@ export default function Shell() {
               👾
             </div>
             <div>
-              <h1 className="text-sm font-bold tracking-[0.2em] uppercase" style={{ fontFamily: 'var(--font-orbitron)', color: 'var(--accent-cyan)' }}>
+              <h1 className="text-sm font-bold tracking-[0.2em] uppercase" style={{ fontFamily: 'var(--font-display)', color: 'var(--accent-cyan)' }}>
                 {config.title ?? 'Clawtrol'}
               </h1>
               <p className="text-[10px] tracking-wider" style={{ color: 'var(--text-dim)' }}>
@@ -119,7 +119,7 @@ export default function Shell() {
         <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--border-dim)' }}>
           <div className="flex items-center gap-2">
             <span className="text-lg">👾</span>
-            <span className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: 'var(--font-orbitron)', color: 'var(--accent-cyan)' }}>
+            <span className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: 'var(--font-display)', color: 'var(--accent-cyan)' }}>
               {config.title ?? 'Clawtrol'}
             </span>
           </div>
@@ -155,7 +155,7 @@ export default function Shell() {
 
         {/* Drawer footer */}
         <div className="px-4 py-3 border-t" style={{ borderColor: 'var(--border-dim)' }}>
-          <div className="text-[8px] tracking-[0.3em] uppercase" style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-orbitron)' }}>
+          <div className="text-[8px] tracking-[0.3em] uppercase" style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-display)' }}>
             {config.title ?? 'Clawtrol'} · v0.1.0
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function Shell() {
 
       {/* Footer */}
       <footer className="text-center py-3" style={{ color: 'var(--text-dim)' }}>
-        <div className="text-[9px] tracking-[0.3em] uppercase" style={{ fontFamily: 'var(--font-orbitron)' }}>
+        <div className="text-[9px] tracking-[0.3em] uppercase" style={{ fontFamily: 'var(--font-display)' }}>
           {config.title ?? 'Clawtrol'} · CONTROL CENTER
         </div>
       </footer>

@@ -21,10 +21,12 @@ const config: ClawtrolConfig = {
 
   // Theme configuration
   theme: {
+    // 'nova' | 'midnight' | 'catppuccin' | 'solar'
+    preset: 'nova',
     // 'dark' | 'light' | 'system'
     mode: 'dark',
-    // Accent color (any valid CSS color or tailwind color name)
-    accent: '#3b82f6', // blue-500
+    // Accent color override (any valid CSS color)
+    accent: '#3b82f6',
   },
 
   // OpenClaw configuration

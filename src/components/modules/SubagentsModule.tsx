@@ -33,7 +33,7 @@ export default function SubagentsModule() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold" style={{ color: 'var(--accent-cyan)', fontFamily: 'var(--font-orbitron)' }}>
+          <h2 className="text-lg font-semibold" style={{ color: 'var(--accent-cyan)', fontFamily: 'var(--font-display)' }}>
             SUB-AGENT REGISTRY
           </h2>
           <p className="text-[11px] mt-1" style={{ color: 'var(--text-dim)' }}>

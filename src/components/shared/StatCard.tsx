@@ -10,7 +10,7 @@ export function Card({ title, children, className = '', actions, tag }: { title?
         <div className="flex justify-between items-center px-3 py-2 border-b" style={{ borderColor: 'var(--border-dim)' }}>
           <div className="flex items-center gap-2">
             {title && (
-              <h2 className="text-[11px] font-medium uppercase tracking-widest" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-orbitron)' }}>
+              <h2 className="text-[11px] font-medium uppercase tracking-widest" style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-display)' }}>
                 {title}
               </h2>
             )}

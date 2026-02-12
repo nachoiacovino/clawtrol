@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Orbitron, JetBrains_Mono } from "next/font/google";
+import { Orbitron, JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import config from "../../clawtrol.config";
+import ThemeProvider from "@/components/ThemeProvider";
+import { getThemePreset } from "@/lib/themes";
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -12,6 +15,12 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -27,11 +36,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const preset = getThemePreset(config.theme?.preset);
+  const fontClasses = [
+    inter.variable,
+    preset.fonts.display === 'orbitron' ? orbitron.variable : '',
+    preset.fonts.data === 'jetbrains' ? jetbrainsMono.variable : '',
+  ].join(' ');
+
   return (
     <html lang="en">
-      <body
-        className={`${orbitron.variable} ${jetbrainsMono.variable} antialiased`}
-      >
+      <body className={`${fontClasses} antialiased`}>
+        <ThemeProvider
+          preset={config.theme?.preset}
+          mode={config.theme?.mode}
+          accent={config.theme?.accent}
+        />
         {children}
       </body>
     </html>
