@@ -1,0 +1,246 @@
+#!/usr/bin/env node
+
+import { createInterface } from 'node:readline';
+import { execSync, spawn } from 'node:child_process';
+import { existsSync, mkdirSync, cpSync, writeFileSync, readdirSync, statSync } from 'node:fs';
+import { resolve, dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const PKG_ROOT = resolve(__dirname, '..');
+
+// ── Modules ──────────────────────────────────────────────────────────
+
+const ALL_MODULES = [
+  { id: 'overview',   label: 'Overview',    desc: 'System stats — CPU, RAM, disk, uptime, weather' },
+  { id: 'screen',     label: 'Screen',      desc: 'Remote screen viewer with click interaction' },
+  { id: 'terminal',   label: 'Terminal',    desc: 'Web terminal via ttyd PTY' },
+  { id: 'files',      label: 'Files',       desc: 'File browser with read & zip' },
+  { id: 'sessions',   label: 'Sessions',    desc: 'OpenClaw session viewer & chat' },
+  { id: 'tasks',      label: 'Tasks',       desc: 'Kanban task board' },
+  { id: 'memory',     label: 'Memory',      desc: 'Memory & markdown file browser' },
+  { id: 'cron',       label: 'Cron',        desc: 'Cron job manager' },
+  { id: 'logs',       label: 'Logs',        desc: 'Gateway log viewer' },
+  { id: 'network',    label: 'Network',     desc: 'Tailscale peers & processes' },
+  { id: 'subagents',  label: 'Sub-agents',  desc: 'Sub-agent management' },
+];
+
+// ── Helpers ──────────────────────────────────────────────────────────
+
+function ask(rl, question) {
+  return new Promise((res) => rl.question(question, res));
+}
+
+function print(msg = '') {
+  process.stdout.write(msg + '\n');
+}
+
+function bold(s) { return `\x1b[1m${s}\x1b[0m`; }
+function cyan(s) { return `\x1b[36m${s}\x1b[0m`; }
+function green(s) { return `\x1b[32m${s}\x1b[0m`; }
+function dim(s) { return `\x1b[2m${s}\x1b[0m`; }
+function yellow(s) { return `\x1b[33m${s}\x1b[0m`; }
+
+// ── Banner ───────────────────────────────────────────────────────────
+
+function showBanner() {
+  print();
+  print(cyan('   ____  _                   _              _ '));
+  print(cyan('  / ___|| |  __ _  __      _| |_  _ __  ___| |'));
+  print(cyan(' | |    | | / _` | \\ \\ /\\ / / __|| \'__|/ _ \\ |'));
+  print(cyan(' | |___ | || (_| |  \\ V  V /| |_ | |  | (_) | |'));
+  print(cyan('  \\____||_| \\__,_|   \\_/\\_/  \\__||_|   \\___/|_|'));
+  print();
+  print(bold('  Open-source dashboard for OpenClaw AI agents'));
+  print(dim('  https://github.com/nachoandmikey/clawtrol'));
+  print();
+}
+
+// ── Init Command ─────────────────────────────────────────────────────
+
+async function runInit() {
+  showBanner();
+
+  const rl = createInterface({ input: process.stdin, output: process.stdout });
+
+  try {
+    // 1. Project name
+    const projectName = (await ask(rl, `${bold('Project name')} ${dim('(my-dashboard)')}: `)).trim() || 'my-dashboard';
+
+    // 2. Dashboard title
+    const title = (await ask(rl, `${bold('Dashboard title')} ${dim('(Clawtrol Center)')}: `)).trim() || 'Clawtrol Center';
+
+    // 3. Module selection
+    print();
+    print(bold('Modules') + ' ' + dim('(all enabled by default — type numbers to toggle off)'));
+    print();
+    const enabled = new Array(ALL_MODULES.length).fill(true);
+    ALL_MODULES.forEach((m, i) => {
+      print(`  ${green(`[${i + 1}]`)} ${m.label.padEnd(12)} ${dim(m.desc)}`);
+    });
+    print();
+    const toggleInput = (await ask(rl, `${bold('Toggle off')} ${dim('(e.g. 1,3,5 or press Enter for all)')}: `)).trim();
+    if (toggleInput) {
+      const nums = toggleInput.split(/[\s,]+/).map(Number).filter(n => n >= 1 && n <= ALL_MODULES.length);
+      for (const n of nums) enabled[n - 1] = false;
+    }
+    const selectedModules = ALL_MODULES.filter((_, i) => enabled[i]).map(m => m.id);
+
+    // 4. Theme
+    print();
+    const themeInput = (await ask(rl, `${bold('Theme')} — ${green('1')} dark ${dim('(default)')} / ${green('2')} light: `)).trim();
+    const theme = themeInput === '2' ? 'light' : 'dark';
+
+    // 5. OpenClaw API URL
+    const apiUrl = (await ask(rl, `${bold('OpenClaw API URL')} ${dim('(http://localhost:3000)')}: `)).trim() || 'http://localhost:3000';
+
+    rl.close();
+
+    // ── Summary ──
+    print();
+    print(bold('  --- Setup Summary ---'));
+    print(`  Project:  ${cyan(projectName)}`);
+    print(`  Title:    ${title}`);
+    print(`  Modules:  ${selectedModules.length}/${ALL_MODULES.length} enabled`);
+    print(`  Theme:    ${theme}`);
+    print(`  API URL:  ${apiUrl}`);
+    print();
+
+    // ── Scaffold ──
+    const dest = resolve(process.cwd(), projectName);
+
+    if (existsSync(dest)) {
+      print(yellow(`  Directory "${projectName}" already exists. Aborting.`));
+      process.exit(1);
+    }
+
+    print(dim('  Scaffolding project...'));
+    mkdirSync(dest, { recursive: true });
+
+    // Copy template files (exclude bin/, node_modules/, .git/, .next/)
+    const SKIP = new Set(['bin', 'node_modules', '.git', '.next']);
+    const entries = readdirSync(PKG_ROOT);
+    for (const entry of entries) {
+      if (SKIP.has(entry)) continue;
+      const src = join(PKG_ROOT, entry);
+      const dst = join(dest, entry);
+      cpSync(src, dst, { recursive: true });
+    }
+
+    // ── Generate clawtrol.config.ts ──
+    const modulesStr = selectedModules.map(m => `    '${m}',`).join('\n');
+
+    // Parse port from apiUrl
+    let gatewayPort = 3000;
+    try {
+      const u = new URL(apiUrl);
+      if (u.port) gatewayPort = parseInt(u.port, 10);
+    } catch {}
+
+    const configContent = `import type { ClawtrolConfig } from './src/lib/config';
+
+const config: ClawtrolConfig = {
+  title: '${title.replace(/'/g, "\\'")}',
+
+  modules: [
+${modulesStr}
+  ],
+
+  theme: {
+    mode: '${theme}',
+    accent: '#3b82f6',
+  },
+
+  openclaw: {
+    gatewayPort: ${gatewayPort},
+  },
+
+  port: 3001,
+};
+
+export default config;
+`;
+
+    writeFileSync(join(dest, 'clawtrol.config.ts'), configContent);
+
+    // ── Install deps ──
+    print(dim('  Installing dependencies...'));
+    print();
+    try {
+      execSync('npm install', { cwd: dest, stdio: 'inherit' });
+    } catch {
+      print(yellow('\n  npm install failed — you can run it manually later.'));
+    }
+
+    // ── Success ──
+    print();
+    print(green('  Done! Your Clawtrol dashboard is ready.'));
+    print();
+    print(`  ${bold('Next steps:')}`);
+    print(`    cd ${projectName}`);
+    print(`    npm run dev`);
+    print();
+    print(dim(`  Then open http://localhost:3001`));
+    print();
+  } catch (err) {
+    rl.close();
+    throw err;
+  }
+}
+
+// ── Dev Command ──────────────────────────────────────────────────────
+
+function runDev() {
+  const child = spawn('npx', ['next', 'dev', '--port', '3001'], {
+    cwd: process.cwd(),
+    stdio: 'inherit',
+    shell: true,
+  });
+  child.on('exit', (code) => process.exit(code ?? 0));
+}
+
+// ── Build Command ────────────────────────────────────────────────────
+
+function runBuild() {
+  const child = spawn('npx', ['next', 'build'], {
+    cwd: process.cwd(),
+    stdio: 'inherit',
+    shell: true,
+  });
+  child.on('exit', (code) => process.exit(code ?? 0));
+}
+
+// ── CLI Router ───────────────────────────────────────────────────────
+
+const command = process.argv[2];
+
+switch (command) {
+  case 'init':
+    runInit().catch((err) => {
+      console.error(err);
+      process.exit(1);
+    });
+    break;
+
+  case 'dev':
+    runDev();
+    break;
+
+  case 'build':
+    runBuild();
+    break;
+
+  default:
+    showBanner();
+    print(bold('  Usage:'));
+    print(`    clawtrol ${green('init')}    Create a new Clawtrol project`);
+    print(`    clawtrol ${green('dev')}     Start the dev server`);
+    print(`    clawtrol ${green('build')}   Build for production`);
+    print();
+    if (command) {
+      print(yellow(`  Unknown command: "${command}"`));
+      print();
+    }
+    break;
+}

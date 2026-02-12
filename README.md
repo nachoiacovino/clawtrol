@@ -6,6 +6,28 @@ Built for headless setups (Mac minis, VPS, Raspberry Pi) but works anywhere Open
 
 ![Clawtrol Dashboard](./docs/screenshot.png)
 
+## 🚀 Quick Start
+
+```bash
+npx clawtrol init
+cd my-dashboard
+npm run dev
+```
+
+Open [http://localhost:3001](http://localhost:3001).
+
+> The setup wizard walks you through project name, modules, theme, and API config — then scaffolds everything for you.
+
+### Manual Setup
+
+```bash
+git clone https://github.com/nachoandmikey/clawtrol.git
+cd clawtrol
+npm install
+cp clawtrol.config.example.ts clawtrol.config.ts
+npm run dev
+```
+
 ## ✨ Features
 
 | Module | What it does |
@@ -23,23 +45,6 @@ Built for headless setups (Mac minis, VPS, Raspberry Pi) but works anywhere Open
 | **Sub-agents** | Monitor and manage spawned sub-agents |
 
 Every module is **optional** — enable only what you need.
-
-## 🚀 Quick Start
-
-```bash
-# Clone and install
-git clone https://github.com/nachoandmikey/clawtrol.git
-cd clawtrol
-pnpm install
-
-# Configure (edit which modules you want)
-cp clawtrol.config.example.ts clawtrol.config.ts
-
-# Run
-pnpm dev
-```
-
-Open [http://localhost:3001](http://localhost:3001).
 
 ## ⚙️ Configuration
 

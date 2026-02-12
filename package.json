@@ -1,13 +1,42 @@
 {
-  "name": "control-center",
+  "name": "clawtrol",
   "version": "0.1.0",
-  "private": true,
+  "description": "Open-source dashboard for OpenClaw AI agents",
+  "bin": {
+    "clawtrol": "./bin/clawtrol.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "public/",
+    "clawtrol.config.example.ts",
+    "next.config.ts",
+    "postcss.config.mjs",
+    "tsconfig.json",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "dev": "next dev --port 3001",
     "build": "next build",
     "start": "next start --port 3001",
     "lint": "eslint"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nachoandmikey/clawtrol.git"
+  },
+  "homepage": "https://github.com/nachoandmikey/clawtrol#readme",
+  "keywords": [
+    "openclaw",
+    "dashboard",
+    "ai-agents",
+    "monitoring",
+    "nextjs",
+    "cli"
+  ],
+  "license": "MIT",
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.4",
