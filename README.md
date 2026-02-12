@@ -6,6 +6,40 @@ Built for headless setups (Mac minis, VPS, Raspberry Pi) but works anywhere Open
 
 ![Clawtrol Dashboard](./docs/screenshot.png)
 
+<details>
+<summary><strong>More screenshots</strong></summary>
+
+**Sessions** — monitor all OpenClaw sessions, costs, and token usage
+![Sessions](./docs/screenshot-sessions.png)
+
+**Tasks** — kanban board with project filters
+![Tasks](./docs/screenshot-tasks.png)
+
+**Screen** — remote screen viewer with click interaction
+![Screen](./docs/screenshot-screen.png)
+
+**Memory** — browse agent memory files
+![Memory](./docs/screenshot-memory.png)
+
+**Cron** — manage scheduled jobs
+![Cron](./docs/screenshot-cron.png)
+
+</details>
+
+<details>
+<summary><strong>Theme presets</strong></summary>
+
+**Midnight** — clean dark minimal
+![Midnight](./docs/theme-midnight.png)
+
+**Catppuccin** — warm pastel dark
+![Catppuccin](./docs/theme-catppuccin.png)
+
+**Solar** — solarized light
+![Solar](./docs/theme-solar.png)
+
+</details>
+
 ## 🚀 Quick Start
 
 ```bash
