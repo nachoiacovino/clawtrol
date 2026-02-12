@@ -15,8 +15,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MIKEY NOVA // CONTROL CENTER",
-  description: "Mac mini mission control & system monitoring",
+  title: "Clawtrol — Control Center",
+  description: "System monitoring & control dashboard",
   icons: {
     icon: "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👾</text></svg>",
   },
