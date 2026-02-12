@@ -31,14 +31,20 @@ npm run dev
 ## Running
 
 ### Development
+```bash
 npm run dev
+```
 
 ### Production (daemon via pm2)
+```bash
 npm start          # build + start on port 3001 (or next available)
 npm run status     # check if running
 npm run logs       # view logs
 npm run restart    # restart
 npm stop           # stop and remove from pm2
+```
+
+> pm2 is included with OpenClaw. Clawtrol auto-detects a free port if 3001 is taken.
 
 ## ✨ Features
 
@@ -174,42 +180,54 @@ Then configure Next.js to use the generated certs, or put Caddy/nginx in front.
 
 Clawtrol has **no built-in auth** — it assumes you're accessing it over a trusted network (like Tailscale). Don't expose port 3001 to the public internet without adding authentication.
 
-## 🎨 Theming
+## 🎨 Themes
 
-Clawtrol uses CSS variables for easy theme customization. The default dark theme works great, but you can customize:
+Four built-in presets, selectable during `npx clawtrol init` or in config:
+
+| Preset | Vibe |
+|--------|------|
+| 🟢 **Nova** (default) | Cyberpunk command center — Orbitron + JetBrains Mono, cyan glow, near-black BG |
+| 🔵 **Midnight** | Clean dark minimal — Inter font, slate tones, blue accents |
+| 🟣 **Catppuccin** | Warm pastel dark — cozy dev vibes, mauve/pink/sky accents |
+| ☀️ **Solar** | Solarized light — easy on the eyes for daytime |
 
 ```typescript
 theme: {
-  mode: 'dark',
-  accent: '#10b981', // emerald green
+  preset: 'nova',        // 'nova' | 'midnight' | 'catppuccin' | 'solar'
+  mode: 'dark',          // 'dark' | 'light' | 'system'
+  accent: '#00ffc8',     // override accent color (optional)
 }
 ```
-
-Or go wild with a custom CSS file — see [Theming Guide](./docs/theming.md).
 
 ## 🏗️ Architecture
 
 ```
 src/
 ├── app/
-│   ├── api/          # API routes for each module
+│   ├── api/              # API routes per module
 │   │   ├── screen/
-│   │   ├── files/
 │   │   ├── sessions/
+│   │   ├── plugins/[...slug]/  # Plugin API catch-all
 │   │   └── ...
-│   ├── page.tsx      # Main dashboard shell
-│   └── layout.tsx
+│   ├── page.tsx          # Dashboard shell
+│   └── layout.tsx        # ThemeProvider + fonts
 ├── components/
-│   ├── modules/      # One component per module
-│   │   ├── OverviewModule.tsx
-│   │   ├── ScreenModule.tsx
-│   │   ├── TerminalModule.tsx
+│   ├── modules/          # One folder per module
+│   │   ├── OverviewModule/
+│   │   │   ├── index.tsx
+│   │   │   └── widgets/  # Widget components
+│   │   ├── SessionsModule/
 │   │   └── ...
-│   ├── ui/           # Shared UI primitives
-│   └── Shell.tsx     # Dashboard shell (sidebar + tabs)
+│   ├── Shell.tsx         # Sidebar + mobile drawer
+│   └── ThemeProvider.tsx # Preset theme application
 ├── lib/
-│   ├── config.ts     # Config types & defaults
-│   └── utils.ts      # Shared utilities
+│   ├── config.ts         # Config types + MODULE_META
+│   ├── themes.ts         # Theme presets (nova, midnight, catppuccin, solar)
+│   ├── widgets.ts        # Widget registry
+│   └── plugins.ts        # Plugin loader
+├── bin/
+│   ├── clawtrol.mjs      # CLI + setup wizard
+│   └── daemon.mjs        # pm2 daemon management
 ```
 
 Each module is self-contained — its own component + API route. Disable a module and its code isn't even loaded.
