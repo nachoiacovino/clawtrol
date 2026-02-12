@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readdir, stat } from 'fs/promises';
 import { join, resolve, normalize } from 'path';
+import os from 'os';
 
 export const dynamic = 'force-dynamic';
 
-const BASE_DIR = 'os.homedir()';
+const BASE_DIR = os.homedir();
 
 function isPathSafe(requestedPath: string): boolean {
   const resolved = resolve(normalize(requestedPath));
@@ -61,6 +62,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       path: resolvedPath,
+      basePath: BASE_DIR,
       entries: results,
     });
   } catch (error: unknown) {

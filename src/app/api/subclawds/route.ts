@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 
 export const dynamic = 'force-dynamic';
 
-const REGISTRY_FILE = 'os.homedir()/agents/registry.json';
-const MEMORY_BASE = 'os.homedir()/memory';
+const REGISTRY_FILE = join(os.homedir(), 'agents', 'registry.json');
+const MEMORY_BASE = join(os.homedir(), 'memory');
 
 interface Agent {
   name: string;

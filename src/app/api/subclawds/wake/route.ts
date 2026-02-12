@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { readFile, readdir } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 
 export const dynamic = 'force-dynamic';
 
-const MEMORY_BASE = 'os.homedir()/memory';
-const COMMS_DIR = 'os.homedir()/memory/comms';
-const REGISTRY_FILE = 'os.homedir()/agents/registry.json';
+const MEMORY_BASE = join(os.homedir(), 'memory');
+const COMMS_DIR = join(os.homedir(), 'memory', 'comms');
+const REGISTRY_FILE = join(os.homedir(), 'agents', 'registry.json');
 
 interface WakeCheck {
   agentId: string;

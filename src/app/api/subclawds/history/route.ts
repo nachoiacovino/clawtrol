@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
+import os from 'os';
+import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
-const SUBAGENTS_FILE = 'os.homedir()/.openclaw/subagents/runs.json';
-const HISTORY_FILE = 'os.homedir()/.openclaw/subagents/history.json';
+const SUBAGENTS_FILE = path.join(os.homedir(), '.openclaw', 'subagents', 'runs.json');
+const HISTORY_FILE = path.join(os.homedir(), '.openclaw', 'subagents', 'history.json');
 
 // GET - Get run history for a specific agent
 export async function GET(request: Request) {

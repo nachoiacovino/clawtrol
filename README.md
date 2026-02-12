@@ -300,4 +300,4 @@ MIT — use it however you want.
 
 ---
 
-Built with 👾 by [Mikey Nova & [Nacho](https://github.com/nachoiacovino)
+Built with 👾 by Mikey Nova & [Nacho](https://github.com/nachoiacovino)

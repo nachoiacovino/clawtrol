@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import { readFile, writeFile } from 'fs/promises';
 import { execSync } from 'child_process';
+import os from 'os';
+import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
-const TASKS_FILE = 'os.homedir()/.openclaw/control-center/tasks.json';
+const TASKS_FILE = path.join(os.homedir(), '.openclaw', 'control-center', 'tasks.json');
 
 export async function GET() {
   try {

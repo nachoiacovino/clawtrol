@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { readFile, writeFile } from 'fs/promises';
+import os from 'os';
+import path from 'path';
 
 const execAsync = promisify(exec);
 
 export const dynamic = 'force-dynamic';
 
-const CRON_FILE = 'os.homedir()/.openclaw/cron/jobs.json';
+const CRON_FILE = path.join(os.homedir(), '.openclaw', 'cron', 'jobs.json');
 
 export async function GET() {
   try {

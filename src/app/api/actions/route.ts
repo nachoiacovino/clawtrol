@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import os from 'os';
 
 const execAsync = promisify(exec);
 
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: true, message: 'Logs cleared' });
         
       case 'git-pull':
-        const { stdout } = await execAsync('cd os.homedir() && git pull 2>&1', { timeout: 60000 });
+        const { stdout } = await execAsync(`cd "${os.homedir()}" && git pull 2>&1`, { timeout: 60000 });
         return NextResponse.json({ success: true, message: stdout });
         
       case 'openclaw-update':

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { readFile, readdir, stat } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 
@@ -8,8 +9,8 @@ const execAsync = promisify(exec);
 
 export const dynamic = 'force-dynamic';
 
-const SESSIONS_INDEX = 'os.homedir()/.openclaw/agents/main/sessions/sessions.json';
-const SESSIONS_DIR = 'os.homedir()/.openclaw/agents/main/sessions';
+const SESSIONS_INDEX = join(os.homedir(), '.openclaw', 'agents', 'main', 'sessions', 'sessions.json');
+const SESSIONS_DIR = join(os.homedir(), '.openclaw', 'agents', 'main', 'sessions');
 
 // Topic name mapping for friendly labels
 const TOPIC_NAMES: Record<string, string> = {

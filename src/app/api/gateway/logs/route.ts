@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import os from 'os';
+import path from 'path';
 
 const execAsync = promisify(exec);
 
@@ -12,7 +14,7 @@ export async function GET(request: Request) {
     const lines = parseInt(searchParams.get('lines') || '100');
     const logType = searchParams.get('type') || 'all'; // 'out', 'err', 'all'
     
-    const logDir = 'os.homedir()/.openclaw/logs';
+    const logDir = path.join(os.homedir(), '.openclaw', 'logs');
     let logs = '';
 
     if (logType === 'err' || logType === 'all') {

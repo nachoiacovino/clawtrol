@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { readFile, writeFile, readdir, unlink } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 
 export const dynamic = 'force-dynamic';
 
-const COMMS_DIR = 'os.homedir()/memory/comms';
-const REGISTRY_FILE = 'os.homedir()/agents/registry.json';
+const COMMS_DIR = join(os.homedir(), 'memory', 'comms');
+const REGISTRY_FILE = join(os.homedir(), 'agents', 'registry.json');
 
 // GET - List all pending communication requests
 export async function GET() {

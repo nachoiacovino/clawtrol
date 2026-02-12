@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 
 export const dynamic = 'force-dynamic';
 
-const DATA_DIR = 'os.homedir()/.openclaw/control-center';
+const DATA_DIR = join(os.homedir(), '.openclaw', 'control-center');
 const TASKS_FILE = join(DATA_DIR, 'tasks.json');
 
 interface Activity {

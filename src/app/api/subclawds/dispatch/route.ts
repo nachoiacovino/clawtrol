@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 
 export const dynamic = 'force-dynamic';
 
-const REGISTRY_FILE = 'os.homedir()/agents/registry.json';
-const MEMORY_BASE = 'os.homedir()/memory';
-const AGENTS_BASE = 'os.homedir()/agents';
-const BASE_RULES_FILE = 'os.homedir()/agents/SUBCLAWD_BASE.md';
+const REGISTRY_FILE = join(os.homedir(), 'agents', 'registry.json');
+const MEMORY_BASE = join(os.homedir(), 'memory');
+const AGENTS_BASE = join(os.homedir(), 'agents');
+const BASE_RULES_FILE = join(os.homedir(), 'agents', 'SUBCLAWD_BASE.md');
 
 // This endpoint prepares a task for dispatch and returns the spawn parameters
 // The actual spawning happens from the gateway via sessions_spawn

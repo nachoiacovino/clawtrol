@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { readFile, writeFile, readdir } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 
 export const dynamic = 'force-dynamic';
 
-const COSTS_FILE = 'os.homedir()/memory/costs/agent-costs.json';
-const SESSIONS_DIR = 'os.homedir()/.openclaw/sessions';
+const COSTS_FILE = join(os.homedir(), 'memory', 'costs', 'agent-costs.json');
+const SESSIONS_DIR = join(os.homedir(), '.openclaw', 'sessions');
 
 interface SessionCost {
   sessionId: string;

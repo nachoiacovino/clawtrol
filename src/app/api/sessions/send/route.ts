@@ -1,20 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFile } from 'fs/promises';
+import os from 'os';
+import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
-const CONFIG_PATH = 'os.homedir()/.openclaw/openclaw.json';
+const CONFIG_PATH = path.join(os.homedir(), '.openclaw', 'openclaw.json');
+
+async function getConfig(): Promise<any> {
+  try {
+    const raw = await readFile(CONFIG_PATH, 'utf-8');
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
 
 async function getBotToken(): Promise<string> {
-  const raw = await readFile(CONFIG_PATH, 'utf-8');
-  const config = JSON.parse(raw);
+  const config = await getConfig();
   return config?.channels?.telegram?.botToken || '';
 }
 
-function parseSessionKey(key: string): { chatId: string; topicId?: string } | null {
-  // agent:main:main → DM to owner
+async function getDefaultChatId(): Promise<string | null> {
+  if (process.env.CLAWTROL_CHAT_ID) return process.env.CLAWTROL_CHAT_ID;
+  const config = await getConfig();
+  return config?.channels?.telegram?.chatId || config?.channels?.telegram?.defaultChatId || null;
+}
+
+async function parseSessionKey(key: string): Promise<{ chatId: string; topicId?: string } | null> {
+  // agent:main:main → DM to owner/default chat
   if (key === 'agent:main:main') {
-    return { chatId: 'CHAT_ID' };
+    const configuredChatId = await getDefaultChatId();
+    return configuredChatId ? { chatId: configuredChatId } : null;
   }
 
   // agent:main:telegram:group:<id>:topic:<id>
@@ -40,7 +57,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing sessionKey or message' }, { status: 400 });
     }
 
-    const target = parseSessionKey(sessionKey);
+    const target = await parseSessionKey(sessionKey);
     if (!target) {
       return NextResponse.json({ error: 'Cannot send to this session type (only Telegram sessions supported)' }, { status: 400 });
     }

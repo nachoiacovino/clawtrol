@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { readFile } from 'fs/promises';
+import os from 'os';
+import path from 'path';
 
 const execAsync = promisify(exec);
 
@@ -41,14 +43,9 @@ export async function GET() {
     // Try to read gateway version/config info
     let version = null;
     try {
-      const pkg = await readFile('os.homedir()/node_modules/openclaw/package.json', 'utf-8');
+      const pkg = await readFile(path.join(os.homedir(), '.openclaw', 'package.json'), 'utf-8');
       version = JSON.parse(pkg).version;
-    } catch {
-      try {
-        const pkg = await readFile('os.homedir()/.openclaw/package.json', 'utf-8');
-        version = JSON.parse(pkg).version;
-      } catch {}
-    }
+    } catch {}
 
     return NextResponse.json({
       running,

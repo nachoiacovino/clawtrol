@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFile, stat } from 'fs/promises';
 import { resolve, normalize, extname } from 'path';
+import os from 'os';
 
 export const dynamic = 'force-dynamic';
 
-const BASE_DIR = 'os.homedir()';
+const BASE_DIR = os.homedir();
 const MAX_TEXT_SIZE = 1 * 1024 * 1024; // 1MB
 
 function isPathSafe(requestedPath: string): boolean {

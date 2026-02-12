@@ -3,14 +3,14 @@ import { resolve, normalize, basename } from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { readFile, unlink, stat } from 'fs/promises';
-import { tmpdir } from 'os';
+import os, { tmpdir } from 'os';
 import { join } from 'path';
 
 const execAsync = promisify(exec);
 
 export const dynamic = 'force-dynamic';
 
-const BASE_DIR = 'os.homedir()';
+const BASE_DIR = os.homedir();
 
 function isPathSafe(requestedPath: string): boolean {
   const resolved = resolve(normalize(requestedPath));

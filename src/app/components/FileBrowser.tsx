@@ -83,7 +83,8 @@ function getFileIcon(name: string, type: string): string {
 }
 
 export default function FileBrowser() {
-  const [currentPath, setCurrentPath] = useState('os.homedir()');
+  const [basePath, setBasePath] = useState<string>('');
+  const [currentPath, setCurrentPath] = useState<string>('');
   const [entries, setEntries] = useState<FileEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -104,6 +105,7 @@ export default function FileBrowser() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to load directory');
       setCurrentPath(data.path);
+      setBasePath(data.basePath || data.path);
       setEntries(data.entries);
       setSelectedFile(null);
       setFileContent(null);
@@ -133,7 +135,7 @@ export default function FileBrowser() {
   }, []);
 
   useEffect(() => {
-    fetchDirectory(currentPath);
+    fetchDirectory(currentPath || '/');
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const navigateTo = (path: string) => {
@@ -152,7 +154,8 @@ export default function FileBrowser() {
 
   const goUp = () => {
     const parent = currentPath.split('/').slice(0, -1).join('/') || '/';
-    if (parent.startsWith('os.homedir()') || parent === 'os.homedir()') {
+    if (!basePath) return;
+    if (parent.startsWith(basePath) || parent === basePath) {
       navigateTo(parent);
     }
   };
@@ -170,13 +173,13 @@ export default function FileBrowser() {
       <div className="flex items-center gap-2 mb-3 flex-wrap">
         <button
           onClick={goUp}
-          disabled={currentPath === 'os.homedir()'}
+          disabled={!basePath || currentPath === basePath}
           className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-sm disabled:opacity-30 disabled:cursor-not-allowed transition"
         >
           ⬆️ Up
         </button>
         <button
-          onClick={() => navigateTo('os.homedir()')}
+          onClick={() => basePath && navigateTo(basePath)}
           className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition"
         >
           🏠 Home
@@ -204,7 +207,7 @@ export default function FileBrowser() {
         {pathSegments.map((segment, i) => {
           const segPath = '/' + pathSegments.slice(0, i + 1).join('/');
           const isLast = i === pathSegments.length - 1;
-          const isSafe = segPath.startsWith('os.homedir()');
+          const isSafe = !!basePath && segPath.startsWith(basePath);
           return (
             <span key={segPath} className="flex items-center gap-1 whitespace-nowrap">
               {isSafe && !isLast ? (

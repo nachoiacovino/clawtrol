@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFile } from 'fs/promises';
+import os from 'os';
+import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
-const SESSIONS_INDEX = 'os.homedir()/.openclaw/agents/main/sessions/sessions.json';
-const SESSIONS_DIR = 'os.homedir()/.openclaw/agents/main/sessions';
+const SESSIONS_INDEX = path.join(os.homedir(), '.openclaw', 'agents', 'main', 'sessions', 'sessions.json');
+const SESSIONS_DIR = path.join(os.homedir(), '.openclaw', 'agents', 'main', 'sessions');
 
 interface SessionMessage {
   role: string;

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
+import os from 'os';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
         timeout: 30000,
         maxBuffer: 1024 * 1024,
         env: { ...process.env, PATH: `/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:${process.env.PATH}` },
-        cwd: 'os.homedir()',
+        cwd: os.homedir(),
       }, (error, stdout, stderr) => {
         resolve(NextResponse.json({
           stdout: stdout || '',

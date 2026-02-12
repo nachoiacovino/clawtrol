@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
+import os from 'os';
+import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
-const LATEST_FILE = 'os.homedir()/.openclaw/aranet-latest.json';
-const STATE_FILE = 'os.homedir()/.openclaw/aranet-state.json';
+const LATEST_FILE = path.join(os.homedir(), '.openclaw', 'aranet-latest.json');
+const STATE_FILE = path.join(os.homedir(), '.openclaw', 'aranet-state.json');
 
 export async function GET() {
   try {

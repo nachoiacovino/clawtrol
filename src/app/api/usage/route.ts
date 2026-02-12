@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { readFile, readdir } from 'fs/promises';
 import { join } from 'path';
+import os from 'os';
 
 export const dynamic = 'force-dynamic';
 
-const SESSIONS_DIR = 'os.homedir()/.openclaw/agents/main/sessions';
+const SESSIONS_DIR = join(os.homedir(), '.openclaw', 'agents', 'main', 'sessions');
 const SESSIONS_INDEX = join(SESSIONS_DIR, 'sessions.json');
 
 const TOPIC_NAMES: Record<string, string> = {

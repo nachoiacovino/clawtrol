@@ -4,7 +4,7 @@
 Split the 5600-line `src/app/page.tsx` monolith into modular, independently-loadable tab components.
 
 ## Source
-Original monolith: `os.homedir()/clawtrol/src/app/page.tsx`
+Original monolith: `<home>/clawtrol/src/app/page.tsx`
 
 ## Target Architecture
 
