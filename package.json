@@ -1,6 +1,6 @@
 {
   "name": "clawtrol",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Open-source dashboard for OpenClaw AI agents",
   "bin": {
     "clawtrol": "./bin/clawtrol.mjs"
@@ -29,9 +29,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nachoandmikey/clawtrol.git"
+    "url": "git+https://github.com/nachoiacovino/clawtrol.git"
   },
-  "homepage": "https://github.com/nachoandmikey/clawtrol#readme",
+  "homepage": "https://github.com/nachoiacovino/clawtrol#readme",
   "keywords": [
     "openclaw",
     "dashboard",

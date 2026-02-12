@@ -62,7 +62,7 @@ npm start
 
 ### From source
 ```bash
-git clone https://github.com/nachoandmikey/clawtrol.git
+git clone https://github.com/nachoiacovino/clawtrol.git
 cd clawtrol
 npm install
 clawtrol start
