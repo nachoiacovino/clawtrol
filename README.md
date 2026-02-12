@@ -107,6 +107,56 @@ Simple task management with columns: Backlog → In Progress → In Review → D
 Data stored locally in `~/.openclaw/control-center/tasks.json`.
 </details>
 
+## 🌐 Remote Access via Tailscale
+
+Clawtrol is built for headless machines. The recommended way to access it remotely is via [Tailscale](https://tailscale.com) — a zero-config mesh VPN.
+
+### Setup
+
+1. **Install Tailscale** on your headless machine and your laptop/phone:
+   ```bash
+   # macOS
+   brew install tailscale
+   
+   # Linux
+   curl -fsSL https://tailscale.com/install.sh | sh
+   ```
+
+2. **Start Tailscale** on both devices:
+   ```bash
+   sudo tailscale up
+   ```
+
+3. **Find your machine's Tailscale IP:**
+   ```bash
+   tailscale ip -4
+   # e.g. 100.64.0.2
+   ```
+
+4. **Access Clawtrol** from anywhere on your tailnet:
+   ```
+   http://100.64.0.2:3001
+   ```
+
+### Optional: MagicDNS
+
+With [MagicDNS](https://tailscale.com/kb/1081/magicdns) enabled, access your dashboard by machine name:
+```
+http://my-mac-mini:3001
+```
+
+### Optional: HTTPS with Tailscale Certs
+
+For HTTPS access (needed for clipboard API, notifications, etc.):
+```bash
+tailscale cert my-mac-mini.your-tailnet.ts.net
+```
+Then configure Next.js to use the generated certs, or put Caddy/nginx in front.
+
+### Security Note
+
+Clawtrol has **no built-in auth** — it assumes you're accessing it over a trusted network (like Tailscale). Don't expose port 3001 to the public internet without adding authentication.
+
 ## 🎨 Theming
 
 Clawtrol uses CSS variables for easy theme customization. The default dark theme works great, but you can customize:
